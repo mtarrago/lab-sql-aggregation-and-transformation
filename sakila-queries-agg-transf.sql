@@ -5,8 +5,8 @@ select min(length) as min_duration from film;
 
 -- 1.2. Express the average movie duration in hours and minutes. Don't use decimals.
 -- Hint: Look for floor and round functions.  115 min = 1h55 min
-select  floor((avg(length))/60) as hours, 
-		round((avg(length))-60) as minutes
+select  concat((floor((avg(length))/60) as hours), 
+		(round((avg(length))-60) as minutes)) as average_movie_duration
 from film;
 
 -- 2.1 Calculate the number of days that the company has been operating.
@@ -19,9 +19,10 @@ from rental;
 -- 2.2 Retrieve rental information and add two additional columns to show the month and 
 -- weekday of the rental. Return 20 rows of results.
 select *,
-		month(rental_date),
-		year(rental_date)
-from rental;
+		month(rental_date) as month,
+		dayname(rental_date) as weekday
+from rental
+limit 20;
 
 
 /*
@@ -49,7 +50,6 @@ Sort the results of the film title in ascending order.
     check the manual that corresponds to your MySQL server version 
     for the right syntax to use near 'and  select datediff(return_date,rental_date) as 
     rental_duration ifnull(rental_d' at line 1
-Error Code: 1583. Incorrect parameters in the call to native function 'ifnull'
 */
 select title,rental_duration, 
 ifnull(rental_duration, 'Not available') as rental_duration
@@ -74,6 +74,13 @@ select title from film; -- 944 films have been released
 select rating, count(*) 
 from film
 group by rating;
+
+-- 1.3 The number of films for each rating, sorting the results in descending order of the number of films. 
+-- This will help you to better understand the popularity of different film ratings and adjust purchasing decisions accordingly.
+select rating, count(*) 
+from film
+group by rating
+order by count(*) desc;
 
 /*
 2.1 The mean film duration for each rating, and sort the results in descending order of the 
